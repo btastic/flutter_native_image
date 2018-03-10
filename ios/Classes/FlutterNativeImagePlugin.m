@@ -18,24 +18,36 @@
     }
     else if ([@"compressImage" isEqualToString:call.method]) {
         _arguments = call.arguments;
+        
         NSString *fileExtension = @"_compressed.jpg";
-        NSString *file = [[_arguments objectForKey:@"file"] stringValue];
-        NSString *fileName = [[file lastPathComponent] stringByDeletingPathExtension];
         
-        NSString *temp =  [fileName stringByAppendingString:fileExtension];
         
-        NSURL *furl = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:temp]];
+        int qualityArgument = [[_arguments objectForKey:@"quality"] intValue];
+        int percentageArgument = [[_arguments objectForKey:@"percentage"] intValue];
+        NSString *fileArgument = [_arguments objectForKey:@"file"];
+        NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
         
-        int quality = [[_arguments objectForKey:@"quality"] intValue];
-        int percentage = [[_arguments objectForKey:@"percentage"] intValue];
         
-        NSURL *url = [NSURL URLWithString:file];
-        NSData *data = [NSData dataWithContentsOfURL:url];
+        NSString *fileName = [[fileArgument lastPathComponent] stringByDeletingPathExtension];
+        NSString *tempFileName =  [fileName stringByAppendingString:fileExtension];
+        NSString *finalFileName = [NSTemporaryDirectory() stringByAppendingPathComponent:tempFileName];
+        
+        
+        NSURL *finalFileUrl = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:tempFileName]];
+        
+        
+        
+        NSString *path = [uncompressedFileUrl path];
+        NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
+        NSLog(@"bytes after loading image from file %tu", data.length);
+        
         UIImage *img = [[UIImage alloc] initWithData:data];
+        NSError *error;
         
         if (img.size.height > 1500 || img.size.width > 1500) {
-            CGFloat newWidth = (img.size.width / 100 * percentage);
-            CGFloat newHeight = (img.size.height / 100 * percentage);
+            printf("image needs resizing");
+            CGFloat newWidth = (img.size.width / 100 * percentageArgument);
+            CGFloat newHeight = (img.size.height / 100 * percentageArgument);
             
             CGSize newSize = CGSizeMake(newWidth, newHeight);
             UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
@@ -44,14 +56,39 @@
             
             UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-            [UIImageJPEGRepresentation(newImage, quality / 100) writeToFile:furl.absoluteString atomically:YES];
-            result(furl.absoluteString);
+            
+            NSLog(@"saving image to %s", [finalFileUrl.absoluteString UTF8String]);
+            NSData *imageData = UIImageJPEGRepresentation(newImage, qualityArgument / 100);
+            NSLog(@"bytes after conversion to jpeg to %tu", imageData.length);
+
+            if ([[NSFileManager defaultManager] createFileAtPath:finalFileName contents:imageData attributes:nil]) {
+                result(finalFileName);
+            } else {
+                result([FlutterError errorWithCode:@"create_error"
+                                            message:@"Temporary file could not be created"
+                                            details:nil]);
+            }
+            
+            result(finalFileName);
             return;
         }
         
-        [UIImageJPEGRepresentation(img, quality / 100) writeToFile:furl.absoluteString atomically:YES];
+        NSLog(@"image did not need resizing");
+        NSLog(@"saving image to %s", [finalFileUrl.absoluteString UTF8String]);
         
-        result(furl.absoluteString);
+        NSData *imageData = UIImageJPEGRepresentation(img, qualityArgument / 100);
+        
+        NSLog(@"bytes after conversion to jpeg to %tu", imageData.length);
+        
+        if ([[NSFileManager defaultManager] createFileAtPath:finalFileName contents:imageData attributes:nil]) {
+            result(finalFileName);
+        } else {
+            result([FlutterError errorWithCode:@"create_error"
+                                       message:@"Temporary file could not be created"
+                                       details:nil]);
+        }
+        
+        result(finalFileName);
         return;
     } else {
         result(FlutterMethodNotImplemented);
