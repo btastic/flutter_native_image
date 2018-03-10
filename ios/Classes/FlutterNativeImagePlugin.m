@@ -1,4 +1,5 @@
 #import "FlutterNativeImagePlugin.h"
+#import <UIKit/UIKit.h>
 
 @implementation FlutterNativeImagePlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
@@ -10,15 +11,22 @@
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-
-  if ([@"getPlatformVersion" isEqualToString:call.method]) {
-    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
-  else if ([@"compressImage" isEqualToString:call.method]) {
+    NSDictionary *_arguments;
+    if ([@"getPlatformVersion" isEqualToString:call.method]) {
+        result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
+    else if ([@"compressImage" isEqualToString:call.method]) {
+        _arguments = call.arguments;
+        NSString file = [[_arguments objectForKey:@"file"] stringValue]
+        int quality = [[_arguments objectForKey:@"quality"] intValue];
+        int percentage = [[_arguments objectForKey:@"percentage"] intValue];
     
-  }
-  } else {
-    result(FlutterMethodNotImplemented);
-  }
+        NSData *data = [NSData dataWithContentsOfURL:file];
+        UIImage img = [[UIImage alloc] initWithData:data];
+        NSData* compressed = UIImageJPEGRepresentation(img, quality / 100);
+
+    } else {
+        result(FlutterMethodNotImplemented);
+    }
 }
 
 +(UIImage *)compressImage:(UIImage *)image{
