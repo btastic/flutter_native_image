@@ -1,6 +1,7 @@
 #import "FlutterNativeImagePlugin.h"
 #import <UIKit/UIKit.h>
 
+
 @implementation FlutterNativeImagePlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
     FlutterMethodChannel* channel = [FlutterMethodChannel
@@ -42,8 +43,7 @@
         NSLog(@"bytes after loading image from file %tu", data.length);
         
         UIImage *img = [[UIImage alloc] initWithData:data];
-        NSError *error;
-        
+
         if (img.size.height > 1500 || img.size.width > 1500) {
             printf("image needs resizing");
             CGFloat newWidth = (img.size.width / 100 * percentageArgument);
@@ -51,11 +51,13 @@
             
             CGSize newSize = CGSizeMake(newWidth, newHeight);
             
+            img = [img resizableImageWithCapInsets:UIEdgeInsetsZero resizingMode: UIImageResizingModeStretch ];
+            
             NSLog(@"using image scale for sizing");
             UIGraphicsBeginImageContextWithOptions(newSize, NO, img.scale);
-            
+
             [img drawInRect:CGRectMake(0, 0, newWidth, newWidth)];
-            
+
             UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
             
