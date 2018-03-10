@@ -50,7 +50,7 @@
             CGFloat newHeight = (img.size.height / 100 * percentageArgument);
             
             CGSize newSize = CGSizeMake(newWidth, newHeight);
-            UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+            UIGraphicsBeginImageContextWithOptions(newSize, NO, 1.0);
             
             [img drawInRect:CGRectMake(0, 0, newWidth, newWidth)];
             
