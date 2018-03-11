@@ -6,14 +6,25 @@ This plugin aims to have native tools to resize images and reduce their quality 
 Right now there is only a compression function available.
 
 ## Usage
-You have to give it a file from the file system and optionally provide a quality (1-100) and a resizing percentage (1-100).
 
-Each platform will use it's proper tools to handle the resizing.
+### Install
 
+Add the following lines to your pubspec.yaml under dependencies
+
+```yaml
+flutter_native_image:
+  git: https://github.com/btastic/flutter_native_image.git
+```
+
+### Compress an image
 ```dart
 var compressedFile = await FlutterNativeImage.compressImage(file.path,
     quality: quality, percentage: percentage);
 ```
+
+You have to give it a file from the file system and optionally provide a quality (1-100) and a resizing percentage (1-100).
+Each platform will use it's proper tools to handle the resizing.
+
 
 ### Credits
 Shoutouts to Trevor from Vocaro.com. He had the fitting algorithm for resizing images in Objective-C.
