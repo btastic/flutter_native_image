@@ -18,7 +18,7 @@ flutter_native_image:
 
 ### Compress an image
 ```dart
-var compressedFile = await FlutterNativeImage.compressImage(file.path,
+File compressedFile = await FlutterNativeImage.compressImage(file.path,
     quality: quality, percentage: percentage);
 ```
 
