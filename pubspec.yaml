@@ -1,13 +1,17 @@
 name: flutter_native_image
 description: A new flutter plugin project.
 version: 0.0.1
-author: btastic
+author: btastic <bkonsem@gmail.com>
 homepage: https://github.com/btastic
 
 dependencies:
   flutter:
     sdk: flutter
 
+environment:
+  sdk: ">=1.19.0 <2.0.0"
+  flutter: "^0.1.2"
+  
 flutter:
   plugin:
     androidPackage: com.example.flutternativeimage
