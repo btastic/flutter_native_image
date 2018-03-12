@@ -53,7 +53,7 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
                 bmp, newWidth, newHeight, false);
       }
 
-      bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
+      bmp.compress(Bitmap.CompressFormat.JPEG, quality, bos);
 
       String outputFileName = getTempFileNameFromFile(file);
 
