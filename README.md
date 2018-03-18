@@ -30,3 +30,5 @@ Each platform will use it's proper tools to handle the resizing.
 Shoutouts to Trevor from Vocaro.com. He had the fitting algorithm for resizing images in Objective-C.
 
 Source: http://vocaro.com/trevor/blog/2009/10/12/resize-a-uiimage-the-right-way/
+
+For preserving exif information, I took the code from googles image_picker github (https://github.com/flutter/plugins/tree/master/packages/image_picker)
