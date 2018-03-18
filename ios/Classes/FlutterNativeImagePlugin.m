@@ -11,6 +11,16 @@
     [registrar addMethodCallDelegate:instance channel:channel];
 }
 
+- (UIImage *)normalizedImage:(UIImage *)image {
+  if (image.imageOrientation == UIImageOrientationUp) return image;
+
+  UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+  [image drawInRect:(CGRect){0, 0, image.size}];
+  UIImage *normalizedImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  return normalizedImage;
+}
+
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *_arguments;
     
@@ -44,6 +54,7 @@
             CGSize newSize = CGSizeMake(newWidth, newHeight);
             
             UIImage *resizedImage = [img resizedImage:newSize interpolationQuality:kCGInterpolationHigh];
+            resizedImage = [self normalizedImage:resizedImage];
             NSData *imageData = UIImageJPEGRepresentation(resizedImage, qualityArgument / 100);
 
             if ([[NSFileManager defaultManager] createFileAtPath:finalFileName contents:imageData attributes:nil]) {
@@ -53,6 +64,7 @@
                                             message:@"Temporary file could not be created"
                                             details:nil]);
             }
+
             
             result(finalFileName);
             return;
