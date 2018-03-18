@@ -2,6 +2,8 @@ package com.example.flutternativeimage;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -15,6 +17,10 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * FlutterNativeImagePlugin
@@ -66,6 +72,8 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
         e.printStackTrace();
       }
 
+      copyExif(fileName, outputFileName);
+
       result.success(outputFileName);
       return;
     }
@@ -73,6 +81,49 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
     } else {
       result.notImplemented();
+    }
+  }
+
+  private void copyExif(String filePathOri, String filePathDest) {
+    try {
+      ExifInterface oldExif = new ExifInterface(filePathOri);
+      ExifInterface newExif = new ExifInterface(filePathDest);
+
+      List<String> attributes =
+          Arrays.asList(
+              "FNumber",
+              "ExposureTime",
+              "ISOSpeedRatings",
+              "GPSAltitude",
+              "GPSAltitudeRef",
+              "FocalLength",
+              "GPSDateStamp",
+              "WhiteBalance",
+              "GPSProcessingMethod",
+              "GPSTimeStamp",
+              "DateTime",
+              "Flash",
+              "GPSLatitude",
+              "GPSLatitudeRef",
+              "GPSLongitude",
+              "GPSLongitudeRef",
+              "Make",
+              "Model",
+              "Orientation");
+      for (String attribute : attributes) {
+        setIfNotNull(oldExif, newExif, attribute);
+      }
+
+      newExif.saveAttributes();
+
+    } catch (Exception ex) {
+      Log.e("FlutterNativeImagePlugin", "Error preserving Exif data on selected image: " + ex);
+    }
+  }
+
+  private void setIfNotNull(ExifInterface oldExif, ExifInterface newExif, String property) {
+    if (oldExif.getAttribute(property) != null) {
+      newExif.setAttribute(property, oldExif.getAttribute(property));
     }
   }
 
