@@ -25,7 +25,7 @@ File compressedFile = await FlutterNativeImage.compressImage(file.path,
 You have to give it a file from the file system and optionally provide a quality (1-100) and a resizing percentage (1-100).
 Each platform will use it's proper tools to handle the resizing.
 
-#### Get image properties
+### Get image properties
 ```dart
 ImageProperties properties = await FlutterNativeImage.getImageProperties(file.path);
 ```
