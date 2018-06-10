@@ -21,6 +21,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashMap;
 
 /**
  * FlutterNativeImagePlugin
@@ -75,6 +76,26 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
       copyExif(fileName, outputFileName);
 
       result.success(outputFileName);
+      return;
+    }
+    if(call.method.equals("getImageProperties")) {
+      String fileName = call.argument("file");
+      File file = new File(fileName);
+
+      if(!file.exists()) {
+        result.error("file does not exist", fileName, null);
+        return;
+      }
+
+      BitmapFactory.Options options = new BitmapFactory.Options();
+      options.inJustDecodeBounds = true;
+      BitmapFactory.decodeFile(fileName,options);
+
+      HashMap<String, Integer> properties = new HashMap<String, Integer>();
+      properties.put("width",options.outWidth);
+      properties.put("height",options.outHeight);
+
+      result.success(properties);
       return;
     }
     if (call.method.equals("getPlatformVersion")) {

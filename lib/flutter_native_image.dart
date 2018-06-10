@@ -17,4 +17,20 @@ class FlutterNativeImage {
 
     return new File(file);
   }
+
+  static Future<ImageProperties> getImageProperties(String fileName) async {
+    var properties = Map.from(await _channel.invokeMethod("getImageProperties",{'file': fileName}));
+    return new ImageProperties(width: properties["width"],height: properties["height"]);
+  }
+
+}
+
+class ImageProperties {
+  int width;
+  int height;
+  
+  ImageProperties({int width = 0, int height = 0}) {
+    this.width = width;
+    this.height = height;
+  }
 }
