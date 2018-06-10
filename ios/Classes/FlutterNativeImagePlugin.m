@@ -82,7 +82,25 @@
         
         result(finalFileName);
         return;
-    } else {
+    } 
+    else if ([@"getImageProperties" isEqualToString:call.method]) {
+        _arguments = call.arguments;
+        
+        NSString *fileArgument = [_arguments objectForKey:@"file"];
+        NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
+        NSString *fileName = [[fileArgument lastPathComponent] stringByDeletingPathExtension];
+
+        NSString *path = [uncompressedFileUrl path];
+        NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
+
+        UIImage *img = [[UIImage alloc] initWithData:data];
+
+        NSDictionary *dict = @{ @"width" : @(lroundf(img.size.width)), @"height" : @(lroundf(img.size.height))};
+
+        result(dict);
+        return;
+    }
+    else {
         result(FlutterMethodNotImplemented);
     }
 }
