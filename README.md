@@ -32,6 +32,9 @@ ImageProperties properties = await FlutterNativeImage.getImageProperties(file.pa
 
 It returns an ImageProperties object containing the width and the height of the image.
 
+### Contributions
+[Alexis Leblond (a-leblond)](https://github.com/a-leblond) the image properties feature.
+
 ### Credits
 Shoutouts to Trevor from Vocaro.com. He had the fitting algorithm for resizing images in Objective-C.
 
