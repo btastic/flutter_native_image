@@ -161,13 +161,6 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
     }
   }
 
-  private static String getTempFileNameFromFile(File file) {
-    String fileName = getFilenameWithoutExtension(file);
-    String newFileName = fileName.concat("_compressed.jpg");
-
-    return new File(pathComponent(file.getPath()), newFileName).getPath();
-  }
-
   private static String pathComponent(String filename) {
     int i = filename.lastIndexOf(File.separator);
     return (i > -1) ? filename.substring(0, i) : filename;
