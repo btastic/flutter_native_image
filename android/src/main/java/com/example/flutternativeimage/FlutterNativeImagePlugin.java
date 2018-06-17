@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.util.Log;
+import android.app.Activity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,12 +28,17 @@ import java.util.HashMap;
  * FlutterNativeImagePlugin
  */
 public class FlutterNativeImagePlugin implements MethodCallHandler {
+  private final Activity activity;
   /**
    * Plugin registration.
    */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_native_image");
-    channel.setMethodCallHandler(new FlutterNativeImagePlugin());
+    channel.setMethodCallHandler(new FlutterNativeImagePlugin(registrar.activity()));
+  }
+
+  private FlutterNativeImagePlugin(Activity activity) {
+    this.activity = activity;
   }
 
   @Override
@@ -62,20 +68,27 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
 
       bmp.compress(Bitmap.CompressFormat.JPEG, quality, bos);
 
-      String outputFileName = getTempFileNameFromFile(file);
-
       try {
+        String outputFileName = File.createTempFile(
+          getFilenameWithoutExtension(file).concat("_compressed"), 
+          ".jpg", 
+          activity.getExternalCacheDir()
+        ).getPath();
+
         OutputStream outputStream = new FileOutputStream(outputFileName);
         bos.writeTo(outputStream);
+
+        copyExif(fileName, outputFileName);
+
+        result.success(outputFileName);
       } catch (FileNotFoundException e) {
         e.printStackTrace();
+        result.error("file does not exist", fileName, null);
       } catch (IOException e) {
         e.printStackTrace();
+        result.error("something went wrong", fileName, null);
       }
 
-      copyExif(fileName, outputFileName);
-
-      result.success(outputFileName);
       return;
     }
     if(call.method.equals("getImageProperties")) {
@@ -146,13 +159,6 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
     if (oldExif.getAttribute(property) != null) {
       newExif.setAttribute(property, oldExif.getAttribute(property));
     }
-  }
-
-  private static String getTempFileNameFromFile(File file) {
-    String fileName = getFilenameWithoutExtension(file);
-    String newFileName = fileName.concat("_compressed.jpg");
-
-    return new File(pathComponent(file.getPath()), newFileName).getPath();
   }
 
   private static String pathComponent(String filename) {
