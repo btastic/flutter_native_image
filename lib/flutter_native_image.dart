@@ -23,6 +23,13 @@ class FlutterNativeImage {
     return new ImageProperties(width: properties["width"],height: properties["height"]);
   }
 
+  static Future<File> cropImage(String fileName, int originX, int originY, int width, int height) async {
+    var file = await _channel.invokeMethod("cropImage",
+        {'file': fileName, 'originX': originX, 'originY': originY, 'width': width, 'height': height});
+
+    return new File(file);
+  }
+
 }
 
 class ImageProperties {
