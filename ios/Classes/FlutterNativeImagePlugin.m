@@ -100,6 +100,53 @@
         result(dict);
         return;
     }
+    else if([@"cropImage" isEqualToString:call.method]) {
+    	_arguments = call.arguments;
+
+    	NSString *fileExtension = @"_cropped.jpg";
+
+    	NSString *fileArgument = [_arguments objectForKey:@"file"];
+    	NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
+    	int originX = [[_arguments objectForKey:@"originX"] intValue];
+    	int originY = [[_arguments objectForKey:@"originY"] intValue];
+    	int width = [[_arguments objectForKey:@"width"] intValue];
+    	int height = [[_arguments objectForKey:@"height"] intValue];
+
+		NSString *fileName = [[fileArgument lastPathComponent] stringByDeletingPathExtension];
+        NSString *tempFileName =  [fileName stringByAppendingString:fileExtension];
+        NSString *finalFileName = [NSTemporaryDirectory() stringByAppendingPathComponent:tempFileName];
+        
+        NSString *path = [uncompressedFileUrl path];
+        NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
+        
+        UIImage *img = [[UIImage alloc] initWithData:data];
+
+        if(originX<0 || originY<0 
+        	|| originX>img.size.width || originY>img.size.height 
+        	|| originX+width>img.size.width || originY+height>img.size.height) {
+        	result([FlutterError errorWithCode:@"bounds_error"
+                                        message:@"Bounds are outside of the dimensions of the source image"
+                                        details:nil]);
+        }
+
+		CGRect cropRect = CGRectMake(originX, originY, width, height);
+		CGImageRef imageRef = CGImageCreateWithImageInRect([img CGImage], cropRect);
+		UIImage *croppedImg = [UIImage imageWithCGImage:imageRef];
+		CGImageRelease(imageRef);
+
+		NSData *imageData = UIImageJPEGRepresentation(croppedImg, 1.0);
+
+        if ([[NSFileManager defaultManager] createFileAtPath:finalFileName contents:imageData attributes:nil]) {
+            result(finalFileName);
+        } else {
+            result([FlutterError errorWithCode:@"create_error"
+                                        message:@"Temporary file could not be created"
+                                        details:nil]);
+        }
+
+        result(finalFileName);
+        return;
+    }
     else {
         result(FlutterMethodNotImplemented);
     }

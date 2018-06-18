@@ -32,6 +32,13 @@ ImageProperties properties = await FlutterNativeImage.getImageProperties(file.pa
 
 It returns an ImageProperties object containing the width and the height of the image.
 
+### Crop an image
+```dart
+File croppedFile = await FlutterNativeImage.cropImage(file.path, originX, originY, width, height);
+```
+
+Returns a file containing the image cropped with the given dimensions.
+
 ### Contributions
 [Alexis Leblond (a-leblond)](https://github.com/a-leblond) the image properties feature.
 
