@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.util.Log;
+import android.app.Activity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import java.lang.IllegalArgumentException;
 
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -27,12 +30,17 @@ import java.util.HashMap;
  * FlutterNativeImagePlugin
  */
 public class FlutterNativeImagePlugin implements MethodCallHandler {
+  private final Activity activity;
   /**
    * Plugin registration.
    */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_native_image");
-    channel.setMethodCallHandler(new FlutterNativeImagePlugin());
+    channel.setMethodCallHandler(new FlutterNativeImagePlugin(registrar.activity()));
+  }
+
+  private FlutterNativeImagePlugin(Activity activity) {
+    this.activity = activity;
   }
 
   @Override
@@ -97,6 +105,55 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
 
       result.success(properties);
       return;
+    }
+    if(call.method.equals("cropImage")) {
+    	String fileName = call.argument("file");
+    	int originX = call.argument("originX");
+    	int originY = call.argument("originY");
+    	int width = call.argument("width");
+    	int height = call.argument("height");
+
+      File file = new File(fileName);
+
+    	if(!file.exists()) {
+  			result.error("file does not exist", fileName, null);
+  			return;
+  		}
+
+    	Bitmap bmp = BitmapFactory.decodeFile(fileName);
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+    	try {
+			 bmp = Bitmap.createBitmap(bmp, originX, originY, width, height);
+      } catch(IllegalArgumentException e) {
+        e.printStackTrace();
+        result.error("bounds are outside of the dimensions of the source image", fileName, null);
+      }
+
+      bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+
+    	try {
+        String outputFileName = File.createTempFile(
+          getFilenameWithoutExtension(file).concat("_cropped"), 
+          ".jpg", 
+          activity.getExternalCacheDir()
+        ).getPath();
+
+  			OutputStream outputStream = new FileOutputStream(outputFileName);
+  			bos.writeTo(outputStream);
+
+        copyExif(fileName, outputFileName);
+
+        result.success(outputFileName);
+  		} catch (FileNotFoundException e) {
+  			e.printStackTrace();
+        result.error("file does not exist", fileName, null);
+  		} catch (IOException e) {
+  			e.printStackTrace();
+        result.error("something went wrong", fileName, null);
+  		}
+
+  		return;
     }
     if (call.method.equals("getPlatformVersion")) {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
