@@ -63,8 +63,8 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
       if (bmp.getHeight() > 1500 || bmp.getWidth() > 1500) {
-        int newWidth = resizeWidth == null ? (bmp.getWidth() / 100 * resizePercentage) : resizeWidth;
-        int newHeight = resizeHeight == null ? (bmp.getHeight() / 100 * resizePercentage) : resizeHeight;
+        int newWidth = resizeWidth == 0 ? (bmp.getWidth() / 100 * resizePercentage) : resizeWidth;
+        int newHeight = resizeHeight == 0 ? (bmp.getHeight() / 100 * resizePercentage) : resizeHeight;
 
         bmp = Bitmap.createScaledBitmap(
                 bmp, newWidth, newHeight, false);
