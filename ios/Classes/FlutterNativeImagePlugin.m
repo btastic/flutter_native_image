@@ -34,6 +34,8 @@
         
         int qualityArgument = [[_arguments objectForKey:@"quality"] intValue];
         int percentageArgument = [[_arguments objectForKey:@"percentage"] intValue];
+        int widthArgument = [[_arguments objectForKey:@"width"] intValue];
+        int heightArgument = [[_arguments objectForKey:@"height"] intValue];
         NSString *fileArgument = [_arguments objectForKey:@"file"];
         NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
         
@@ -48,8 +50,8 @@
 
         if (img.size.height > 1500 || img.size.width > 1500) {
             printf("image needs resizing");
-            CGFloat newWidth = (img.size.width / 100 * percentageArgument);
-            CGFloat newHeight = (img.size.height / 100 * percentageArgument);
+            CGFloat newWidth = widthArgument == null ? (img.size.width / 100 * percentageArgument) : widthArgument;
+            CGFloat newHeight = heightArgument == null ? (img.size.height / 100 * percentageArgument) heightArgument;
             
             CGSize newSize = CGSizeMake(newWidth, newHeight);
             
