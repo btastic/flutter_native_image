@@ -51,7 +51,7 @@
         if (img.size.height > 1500 || img.size.width > 1500) {
             printf("image needs resizing");
             CGFloat newWidth = (widthArgument == 0 ? (img.size.width / 100 * percentageArgument) : widthArgument);
-            CGFloat newHeight = (heightArgument == 0 ? (img.size.height / 100 * percentageArgument) heightArgument);
+            CGFloat newHeight = (heightArgument == 0 ? (img.size.height / 100 * percentageArgument) : heightArgument);
             
             CGSize newSize = CGSizeMake(newWidth, newHeight);
             
