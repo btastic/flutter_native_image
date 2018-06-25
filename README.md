@@ -56,6 +56,8 @@ Returns a file containing the image cropped with the given dimensions.
 ### Contributions
 [Alexis Leblond (a-leblond)](https://github.com/a-leblond) the image properties feature.
 
+[Eugene Strokin](https://github.com/strokin) the resize to target height/width feature
+
 ### Credits
 Shoutouts to Trevor from Vocaro.com. He had the fitting algorithm for resizing images in Objective-C.
 
