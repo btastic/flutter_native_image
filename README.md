@@ -29,14 +29,14 @@ To resize the image to the certain size, use following code:
 ```dart
 ImageProperties properties = await FlutterNativeImage.getImageProperties(file.path);
 File compressedFile = await FlutterNativeImage.compressImage(file.path, quality: 80, 
-                              width: 600, height: 300);
+    width: 600, height: 300);
 ```
 Keep aspect ratio of the file:
 ```dart
 ImageProperties properties = await FlutterNativeImage.getImageProperties(file.path);
 File compressedFile = await FlutterNativeImage.compressImage(file.path, quality: 80, 
-                              width: 600, 
-                              height: (properties.height * 600 / properties.width).round());
+    width: 600, 
+    height: (properties.height * 600 / properties.width).round());
 ```
 
 ### Get image properties
