@@ -34,8 +34,8 @@
         
         int qualityArgument = [[_arguments objectForKey:@"quality"] intValue];
         int percentageArgument = [[_arguments objectForKey:@"percentage"] intValue];
-        int widthArgument = [[_arguments objectForKey:@"width"] intValue];
-        int heightArgument = [[_arguments objectForKey:@"height"] intValue];
+        int widthArgument = [[_arguments objectForKey:@"targetWidth"] intValue];
+        int heightArgument = [[_arguments objectForKey:@"targetHeight"] intValue];
         NSString *fileArgument = [_arguments objectForKey:@"file"];
         NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
         
