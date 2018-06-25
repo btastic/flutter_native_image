@@ -48,8 +48,8 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
     if(call.method.equals("compressImage")) {
       String fileName = call.argument("file");
       int resizePercentage = call.argument("percentage");
-      int resizeWidth = call.argument("width");
-      int resizeHeight = call.argument("height");
+      int resizeWidth = call.argument("targetWidth");
+      int resizeHeight = call.argument("targetHeight");
       int quality = call.argument("quality");
 
       File file = new File(fileName);
