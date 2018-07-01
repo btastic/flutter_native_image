@@ -48,8 +48,8 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
     if(call.method.equals("compressImage")) {
       String fileName = call.argument("file");
       int resizePercentage = call.argument("percentage");
-      int resizeWidth = call.argument("targetWidth");
-      int resizeHeight = call.argument("targetHeight");
+      int targetWidth = call.argument("targetWidth") == null ? 0 : call.argument("targetWidth");
+      int targetHeight = call.argument("targetHeight") == null ? 0 : call.argument("targetHeight");
       int quality = call.argument("quality");
 
       File file = new File(fileName);
@@ -63,8 +63,8 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
       if (bmp.getHeight() > 1500 || bmp.getWidth() > 1500) {
-        int newWidth = resizeWidth == 0 ? (bmp.getWidth() / 100 * resizePercentage) : resizeWidth;
-        int newHeight = resizeHeight == 0 ? (bmp.getHeight() / 100 * resizePercentage) : resizeHeight;
+        int newWidth = targetWidth == 0 ? (bmp.getWidth() / 100 * resizePercentage) : targetWidth;
+        int newHeight = targetHeight == 0 ? (bmp.getHeight() / 100 * resizePercentage) : targetHeight;
 
         bmp = Bitmap.createScaledBitmap(
                 bmp, newWidth, newHeight, false);
