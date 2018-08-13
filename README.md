@@ -58,6 +58,8 @@ Returns a file containing the image cropped with the given dimensions.
 
 [Eugene Strokin](https://github.com/strokine) the resize to target height/width feature
 
+[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/0)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/0)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/1)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/1)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/2)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/2)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/3)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/3)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/4)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/4)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/5)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/5)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/6)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/6)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/7)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/7)
+
 ### Credits
 Shoutouts to Trevor from Vocaro.com. He had the fitting algorithm for resizing images in Objective-C.
 
