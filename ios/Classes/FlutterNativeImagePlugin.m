@@ -122,6 +122,7 @@
         NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
         
         UIImage *img = [[UIImage alloc] initWithData:data];
+        img = [self normalizedImage:img];
 
         if(originX<0 || originY<0 
         	|| originX>img.size.width || originY>img.size.height 
