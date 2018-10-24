@@ -39,7 +39,11 @@ class FlutterNativeImage {
       'width': width,
       'height': height
     });
-
+    print(fileName);
+    print(originX);
+    print(originY);
+    print(width);
+    print(height);
     return new File(file);
   }
 }
