@@ -132,10 +132,9 @@
         if(originX<0 || originY<0 
         	|| originX>img.size.width || originY>img.size.height 
         	|| originX+width>img.size.width || originY+height>img.size.height) {
-            NSString *message = [NSString stringWithFormat: @"Bounds are outside of the dimensions of the source image height: %@, width: %@, originX: %@, originY %@, img.size.width: %@, img.size.height %@", height, width, originX, originY, img.size.width, img.size.height];
         	result([FlutterError errorWithCode:@"bounds_error"
-                                        message: message
-                                        details:nil]);
+                                        message:@"Bounds are outside of the dimensions of the source image" 
+                                        details:[NSArray arrayWithObjects: height, width, originX, originY, img.size.width, img.size.height, nil]]);
         }
 
 		CGRect cropRect = CGRectMake(originX, originY, width, height);
