@@ -123,12 +123,12 @@
         
         UIImage *img = [[UIImage alloc] initWithData:data];
         img = [self normalizedImage:img];
-        printf("height: $s", height);
-        printf("width: $s", width);
-        printf("originX: $s", originX);
-        printf("originY: $s", originY);
-        printf("img.size.width: $s", img.size.width);
-        printf("img.size.height: $s", img.size.height);
+        NSLog(@"height: %@", height);
+        NSLog(@"width: %@", width);
+        NSLog(@"originX: %@", originX);
+        NSLog(@"originY: %@", originY);
+        NSLog(@"img.size.width: %@", img.size.width);
+        NSLog(@"img.size.height: %@", img.size.height);
         if(originX<0 || originY<0 
         	|| originX>img.size.width || originY>img.size.height 
         	|| originX+width>img.size.width || originY+height>img.size.height) {
