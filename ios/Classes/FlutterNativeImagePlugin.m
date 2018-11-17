@@ -48,7 +48,6 @@
         
         UIImage *img = [[UIImage alloc] initWithData:data];
 
-        printf("image needs resizing");
         CGFloat newWidth = (widthArgument == 0 ? (img.size.width / 100 * percentageArgument) : widthArgument);
         CGFloat newHeight = (heightArgument == 0 ? (img.size.height / 100 * percentageArgument) : heightArgument);
         
