@@ -48,32 +48,15 @@
         
         UIImage *img = [[UIImage alloc] initWithData:data];
 
-        if (img.size.height > 1500 || img.size.width > 1500) {
-            printf("image needs resizing");
-            CGFloat newWidth = (widthArgument == 0 ? (img.size.width / 100 * percentageArgument) : widthArgument);
-            CGFloat newHeight = (heightArgument == 0 ? (img.size.height / 100 * percentageArgument) : heightArgument);
-            
-            CGSize newSize = CGSizeMake(newWidth, newHeight);
-            
-            UIImage *resizedImage = [img resizedImage:newSize interpolationQuality:kCGInterpolationHigh];
-            resizedImage = [self normalizedImage:resizedImage];
-            NSData *imageData = UIImageJPEGRepresentation(resizedImage, qualityArgument / 100);
-
-            if ([[NSFileManager defaultManager] createFileAtPath:finalFileName contents:imageData attributes:nil]) {
-                result(finalFileName);
-            } else {
-                result([FlutterError errorWithCode:@"create_error"
-                                            message:@"Temporary file could not be created"
-                                            details:nil]);
-            }
-
-            
-            result(finalFileName);
-            return;
-        }
+        CGFloat newWidth = (widthArgument == 0 ? (img.size.width / 100 * percentageArgument) : widthArgument);
+        CGFloat newHeight = (heightArgument == 0 ? (img.size.height / 100 * percentageArgument) : heightArgument);
         
-        NSData *imageData = UIImageJPEGRepresentation(img, qualityArgument / 100);
+        CGSize newSize = CGSizeMake(newWidth, newHeight);
         
+        UIImage *resizedImage = [img resizedImage:newSize interpolationQuality:kCGInterpolationHigh];
+        resizedImage = [self normalizedImage:resizedImage];
+        NSData *imageData = UIImageJPEGRepresentation(resizedImage, qualityArgument / 100);
+
         if ([[NSFileManager defaultManager] createFileAtPath:finalFileName contents:imageData attributes:nil]) {
             result(finalFileName);
         } else {
