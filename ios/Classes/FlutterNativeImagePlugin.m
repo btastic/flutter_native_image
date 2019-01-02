@@ -79,8 +79,16 @@
         NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
 
         UIImage *img = [[UIImage alloc] initWithData:data];
-
-        NSDictionary *dict = @{ @"width" : @(lroundf(img.size.width)), @"height" : @(lroundf(img.size.height))};
+        
+        // Class ALAsset that provides a way to get EXIF attributes has been deprecated since iOS 8+,
+        // but the replacing class PHAsset does not have a way to obtain image orientation.
+        // For the purposes of FlutterNativeImagePlgin it's ok to leave it as undefined, as
+        // all images captured/stored on iOS effectively have "normal" orientation so
+        // it should not affect image crop/resize operations.
+        int orientation = 0; // undefined orientation
+        NSDictionary *dict = @{ @"width" : @(lroundf(img.size.width)),
+                                @"height" : @(lroundf(img.size.height)),
+                                @"orientation": @((NSInteger)orientation)};
 
         result(dict);
         return;

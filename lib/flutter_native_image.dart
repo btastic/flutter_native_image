@@ -25,9 +25,26 @@ class FlutterNativeImage {
   }
 
   static Future<ImageProperties> getImageProperties(String fileName) async {
+
+    ImageOrientation decodeOrientation(int orientation) {
+      // For details, see: https://developer.android.com/reference/android/media/ExifInterface
+      switch(orientation) {
+        case 1: return ImageOrientation.normal;
+        case 2: return ImageOrientation.flipHorizontal;
+        case 3: return ImageOrientation.rotate180;
+        case 4: return ImageOrientation.flipVertical;
+        case 5: return ImageOrientation.transpose;
+        case 6: return ImageOrientation.rotate90;
+        case 7: return ImageOrientation.transverse;
+        case 8: return ImageOrientation.rotate270;
+        default: return ImageOrientation.undefined;
+      }
+    }
+
     var properties =
         Map.from(await _channel.invokeMethod("getImageProperties", {'file': fileName}));
-    return new ImageProperties(width: properties["width"], height: properties["height"]);
+    return new ImageProperties(width: properties["width"], height: properties["height"],
+                               orientation: decodeOrientation(properties["orientation"]));
   }
 
   static Future<File> cropImage(
@@ -44,12 +61,22 @@ class FlutterNativeImage {
   }
 }
 
+enum ImageOrientation {
+  normal,
+  rotate90,
+  rotate180,
+  rotate270,
+  flipHorizontal,
+  flipVertical,
+  transpose,
+  transverse,
+  undefined,
+}
+
 class ImageProperties {
   int width;
   int height;
+  ImageOrientation orientation;
 
-  ImageProperties({int width = 0, int height = 0}) {
-    this.width = width;
-    this.height = height;
-  }
+  ImageProperties({this.width = 0, this.height = 0, this.orientation = ImageOrientation.undefined});
 }
