@@ -55,7 +55,7 @@
         
         UIImage *resizedImage = [img resizedImage:newSize interpolationQuality:kCGInterpolationHigh];
         resizedImage = [self normalizedImage:resizedImage];
-        NSData *imageData = UIImageJPEGRepresentation(resizedImage, qualityArgument / 100);
+        NSData *imageData = UIImageJPEGRepresentation(resizedImage, qualityArgument / 100.0);
 
         if ([[NSFileManager defaultManager] createFileAtPath:finalFileName contents:imageData attributes:nil]) {
             result(finalFileName);
