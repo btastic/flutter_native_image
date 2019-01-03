@@ -105,10 +105,18 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
       BitmapFactory.Options options = new BitmapFactory.Options();
       options.inJustDecodeBounds = true;
       BitmapFactory.decodeFile(fileName,options);
-
       HashMap<String, Integer> properties = new HashMap<String, Integer>();
-      properties.put("width",options.outWidth);
-      properties.put("height",options.outHeight);
+      properties.put("width", options.outWidth);
+      properties.put("height", options.outHeight);
+
+      int orientation = ExifInterface.ORIENTATION_UNDEFINED;
+      try {
+        ExifInterface exif = new ExifInterface(fileName);
+        orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+      } catch(IOException ex) {
+        // EXIF could not be read from the file; ignore
+      }
+      properties.put("orientation", orientation);
 
       result.success(properties);
       return;
