@@ -30,8 +30,7 @@
     else if ([@"compressImage" isEqualToString:call.method]) {
         _arguments = call.arguments;
 
-        NSString * uuid = [[NSUUID UUID] UUIDString];
-        NSString *fileExtension = [uuid stringByAppendingString:@"_compressed.jpg"];
+        NSString *fileExtension = @"_compressed.jpg";
 
         int qualityArgument = [[_arguments objectForKey:@"quality"] intValue];
         int percentageArgument = [[_arguments objectForKey:@"percentage"] intValue];
@@ -39,9 +38,10 @@
         int heightArgument = [[_arguments objectForKey:@"targetHeight"] intValue];
         NSString *fileArgument = [_arguments objectForKey:@"file"];
         NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
-        
+
         NSString *fileName = [[fileArgument lastPathComponent] stringByDeletingPathExtension];
-        NSString *tempFileName =  [fileName stringByAppendingString:fileExtension];
+        NSString *uuid = [[NSUUID UUID] UUIDString];
+        NSString *tempFileName =  [NSString stringWithFormat:@"%@%@%@", fileName, uuid, fileExtension];
         NSString *finalFileName = [NSTemporaryDirectory() stringByAppendingPathComponent:tempFileName];
         
         NSString *path = [uncompressedFileUrl path];
@@ -97,8 +97,7 @@
     else if([@"cropImage" isEqualToString:call.method]) {
     	_arguments = call.arguments;
 
-    	NSString * uuid = [[NSUUID UUID] UUIDString];
-        NSString *fileExtension = [uuid stringByAppendingString:@"_cropped.jpg"];
+        NSString *fileExtension = @"_cropped.jpg";
 
     	NSString *fileArgument = [_arguments objectForKey:@"file"];
     	NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
@@ -108,7 +107,8 @@
     	int height = [[_arguments objectForKey:@"height"] intValue];
 
 		NSString *fileName = [[fileArgument lastPathComponent] stringByDeletingPathExtension];
-        NSString *tempFileName =  [fileName stringByAppendingString:fileExtension];
+		NSString *uuid = [[NSUUID UUID] UUIDString];
+        NSString *tempFileName =  [NSString stringWithFormat:@"%@%@%@", fileName, uuid, fileExtension];
         NSString *finalFileName = [NSTemporaryDirectory() stringByAppendingPathComponent:tempFileName];
         
         NSString *path = [uncompressedFileUrl path];
