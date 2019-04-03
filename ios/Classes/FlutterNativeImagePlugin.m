@@ -29,9 +29,10 @@
     }
     else if ([@"compressImage" isEqualToString:call.method]) {
         _arguments = call.arguments;
-        
-        NSString *fileExtension = @"_compressed.jpg";
-        
+
+        NSString * uuid = [[NSUUID UUID] UUIDString];
+        NSString *fileExtension = [uuid stringByAppendingString:@"_compressed.jpg"];
+
         int qualityArgument = [[_arguments objectForKey:@"quality"] intValue];
         int percentageArgument = [[_arguments objectForKey:@"percentage"] intValue];
         int widthArgument = [[_arguments objectForKey:@"targetWidth"] intValue];
@@ -96,7 +97,8 @@
     else if([@"cropImage" isEqualToString:call.method]) {
     	_arguments = call.arguments;
 
-    	NSString *fileExtension = @"_cropped.jpg";
+    	NSString * uuid = [[NSUUID UUID] UUIDString];
+        NSString *fileExtension = [uuid stringByAppendingString:@"_cropped.jpg"];
 
     	NSString *fileArgument = [_arguments objectForKey:@"file"];
     	NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
