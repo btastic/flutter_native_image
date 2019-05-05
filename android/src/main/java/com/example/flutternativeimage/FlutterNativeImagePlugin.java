@@ -66,7 +66,7 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
       int newHeight = targetHeight == 0 ? (bmp.getHeight() / 100 * resizePercentage) : targetHeight;
 
       bmp = Bitmap.createScaledBitmap(
-              bmp, newWidth, newHeight, false);
+              bmp, newWidth, newHeight, true);
 
       bmp.compress(Bitmap.CompressFormat.JPEG, quality, bos);
 
