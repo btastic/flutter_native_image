@@ -40,7 +40,8 @@
         NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
         
         NSString *fileName = [[fileArgument lastPathComponent] stringByDeletingPathExtension];
-        NSString *tempFileName =  [fileName stringByAppendingString:fileExtension];
+        NSString *uuid = [[NSUUID UUID] UUIDString];
+        NSString *tempFileName =  [NSString stringWithFormat:@"%@%@%@", fileName, uuid, fileExtension];
         NSString *finalFileName = [NSTemporaryDirectory() stringByAppendingPathComponent:tempFileName];
         
         NSString *path = [uncompressedFileUrl path];
@@ -96,7 +97,7 @@
     else if([@"cropImage" isEqualToString:call.method]) {
     	_arguments = call.arguments;
 
-    	NSString *fileExtension = @"_cropped.jpg";
+	NSString *fileExtension = @"_cropped.jpg";
 
     	NSString *fileArgument = [_arguments objectForKey:@"file"];
     	NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
@@ -105,8 +106,9 @@
     	int width = [[_arguments objectForKey:@"width"] intValue];
     	int height = [[_arguments objectForKey:@"height"] intValue];
 
-		NSString *fileName = [[fileArgument lastPathComponent] stringByDeletingPathExtension];
-        NSString *tempFileName =  [fileName stringByAppendingString:fileExtension];
+        NSString *fileName = [[fileArgument lastPathComponent] stringByDeletingPathExtension];   
+        NSString *uuid = [[NSUUID UUID] UUIDString];
+        NSString *tempFileName =  [NSString stringWithFormat:@"%@%@%@", fileName, uuid, fileExtension];
         NSString *finalFileName = [NSTemporaryDirectory() stringByAppendingPathComponent:tempFileName];
         
         NSString *path = [uncompressedFileUrl path];
