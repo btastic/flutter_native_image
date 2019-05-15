@@ -43,8 +43,9 @@ class FlutterNativeImage {
 
     var properties =
         Map.from(await _channel.invokeMethod("getImageProperties", {'file': fileName}));
-    return new ImageProperties(width: properties["width"], height: properties["height"],
-                               orientation: decodeOrientation(properties["orientation"]));
+    return new ImageProperties(width: int.parse(properties["width"]), height: int.parse(properties["height"]),
+                               orientation: decodeOrientation(int.parse(properties["orientation"])),
+                               datetime: properties["datetime"]);
   }
 
   static Future<File> cropImage(
@@ -76,7 +77,12 @@ enum ImageOrientation {
 class ImageProperties {
   int width;
   int height;
+  String datetime;
   ImageOrientation orientation;
 
-  ImageProperties({this.width = 0, this.height = 0, this.orientation = ImageOrientation.undefined});
+  ImageProperties(
+    {this.width = 0, 
+    this.height = 0, 
+    this.orientation = ImageOrientation.undefined,
+    this.datetime = ""});
 }
