@@ -44,7 +44,7 @@ File compressedFile = await FlutterNativeImage.compressImage(file.path, quality:
 ImageProperties properties = await FlutterNativeImage.getImageProperties(file.path);
 ```
 
-It returns an ImageProperties object containing the width and the height of the image.
+It returns an ImageProperties object containing the width, height and datetime of the image.
 
 ### Crop an image
 ```dart
