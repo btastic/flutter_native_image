@@ -68,7 +68,10 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
       bmp = Bitmap.createScaledBitmap(
               bmp, newWidth, newHeight, true);
 
-      bmp.compress(Bitmap.CompressFormat.JPEG, quality, bos);
+      // reconfigure bitmap to use RGB_565 before compressing
+      // fixes https://github.com/btastic/flutter_native_image/issues/47
+      Bitmap newBmp = bmp.copy(Bitmap.Config.RGB_565, false);
+      newBmp.compress(Bitmap.CompressFormat.JPEG, quality, bos);
 
       try {
         String outputFileName = File.createTempFile(
