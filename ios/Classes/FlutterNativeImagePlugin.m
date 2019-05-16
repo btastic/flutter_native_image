@@ -87,9 +87,13 @@
         // all images captured/stored on iOS effectively have "normal" orientation so
         // it should not affect image crop/resize operations.
         int orientation = 0; // undefined orientation
+        // Same for datetime. I don't know how to get that yet, but to "support"
+        // The iOS side, we will provide an empty string for now
+        NSString *datetime = @"";
         NSDictionary *dict = @{ @"width" : @(lroundf(img.size.width)),
                                 @"height" : @(lroundf(img.size.height)),
-                                @"orientation": @((NSInteger)orientation)};
+                                @"orientation": @((NSInteger)orientation),
+                                @"datetime": datetime};
 
         result(dict);
         return;
