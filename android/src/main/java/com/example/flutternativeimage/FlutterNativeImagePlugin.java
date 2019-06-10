@@ -145,7 +145,7 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
       }
 
       bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-      bmp.recycle(); // recycle bitmap
+      bmp.recycle();
         OutputStream outputStream = null;
     	try {
         String outputFileName = File.createTempFile(
@@ -170,7 +170,7 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
         }finally {
             if (outputStream != null) {
                 try {
-                    outputStream.close(); // close file OutputStream
+                    outputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
