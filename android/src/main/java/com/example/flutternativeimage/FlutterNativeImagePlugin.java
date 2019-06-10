@@ -221,7 +221,7 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
       newExif.saveAttributes();
 
     } catch (Exception ex) {
-      Log.e("FlutterNativeImagePlugi", "Error preserving Exif data on selected image: " + ex);
+      Log.e("FlutterNativeImagePlugin", "Error preserving Exif data on selected image: " + ex);
     }
   }
 
