@@ -1,10 +1,10 @@
 package com.example.flutternativeimage;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.util.Log;
-import android.app.Activity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -12,19 +12,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
-import java.lang.IllegalArgumentException;
-
+import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.HashMap;
 
 /**
  * FlutterNativeImagePlugin
@@ -75,8 +71,8 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
 
       try {
         String outputFileName = File.createTempFile(
-          getFilenameWithoutExtension(file).concat("_compressed"), 
-          ".jpg", 
+          getFilenameWithoutExtension(file).concat("_compressed"),
+          ".jpg",
           activity.getExternalCacheDir()
         ).getPath();
 
@@ -149,16 +145,18 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
       }
 
       bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-
+      bmp.recycle();
+        OutputStream outputStream = null;
     	try {
         String outputFileName = File.createTempFile(
-          getFilenameWithoutExtension(file).concat("_cropped"), 
-          ".jpg", 
+          getFilenameWithoutExtension(file).concat("_cropped"),
+          ".jpg",
           activity.getExternalCacheDir()
         ).getPath();
 
-  			OutputStream outputStream = new FileOutputStream(outputFileName);
-  			bos.writeTo(outputStream);
+
+            outputStream = new FileOutputStream(outputFileName);
+            bos.writeTo(outputStream);
 
         copyExif(fileName, outputFileName);
 
@@ -167,9 +165,19 @@ public class FlutterNativeImagePlugin implements MethodCallHandler {
   			e.printStackTrace();
         result.error("file does not exist", fileName, null);
   		} catch (IOException e) {
-  			e.printStackTrace();
-        result.error("something went wrong", fileName, null);
-  		}
+            e.printStackTrace();
+            result.error("something went wrong", fileName, null);
+        }finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
 
   		return;
     }
