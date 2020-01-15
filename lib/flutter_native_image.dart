@@ -25,7 +25,6 @@ class FlutterNativeImage {
   }
 
   static Future<ImageProperties> getImageProperties(String fileName) async {
-
     ImageOrientation decodeOrientation(int orientation) {
       // For details, see: https://developer.android.com/reference/android/media/ExifInterface
       switch(orientation) {
@@ -55,6 +54,15 @@ class FlutterNativeImage {
       'originY': originY,
       'width': width,
       'height': height
+    });
+
+    return new File(file);
+  }
+
+  static Future<File> rotateImage(String filePath, int angle) async {
+    var file = await _channel.invokeMethod("rotateImage", {
+      'file': filePath,
+      'angle': angle
     });
 
     return new File(file);
