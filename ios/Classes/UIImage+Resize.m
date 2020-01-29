@@ -122,7 +122,7 @@
                                                 CGImageGetBitsPerComponent(imageRef),
                                                 0,
                                                 CGImageGetColorSpace(imageRef),
-                                                CGImageGetBitmapInfo(imageRef));
+                                                [self normalizeBitmapInfo:CGImageGetBitmapInfo(imageRef)]);
     
     // Rotate and/or flip the image if required by its orientation
     CGContextConcatCTM(bitmap, transform);
@@ -183,6 +183,22 @@
     }
     
     return transform;
+}
+
+// Get normalized bitmap info (replace the unsupported kCGImageAlphaLast and kCGImageAlphaFirst)
+- (CGBitmapInfo)normalizeBitmapInfo:(CGBitmapInfo)oldBitmapInfo {
+    CGImageAlphaInfo alphaInfo = oldBitmapInfo & kCGBitmapAlphaInfoMask;
+    if (alphaInfo == kCGImageAlphaLast) {
+        alphaInfo = kCGImageAlphaPremultipliedLast;
+    } else if (alphaInfo == kCGImageAlphaFirst) {
+        alphaInfo = kCGImageAlphaPremultipliedFirst;
+    }
+    
+    CGBitmapInfo newBitmapInfo = oldBitmapInfo & ~kCGBitmapAlphaInfoMask;
+
+    newBitmapInfo |= alphaInfo;
+
+    return newBitmapInfo;
 }
 
 @end
