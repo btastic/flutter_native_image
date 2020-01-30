@@ -1,4 +1,6 @@
 # flutter_native_image
+[![pub package](https://img.shields.io/pub/v/flutter_native_image.svg?label=flutter_native_image&color=blue)](https://pub.dartlang.org/packages/flutter_native_image)
+
 Native Flutter Image tools
 
 This plugin aims to have native tools to resize images and reduce their quality by compression. The code is somewhat hacky (especially the iOS part), but it works for my needs and hasn't crashed on me. Feel free to improve it if you want to.
