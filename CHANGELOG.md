@@ -1,4 +1,9 @@
-## [0.0.5] - 30.01.2020
+## [0.0.5+1]
+
+* Removed some sample code
+* Added documentation for public API's
+
+## [0.0.5]
 
 * Updated to AndroidX
 * Changed constraints to only support flutter >=1.10.0
