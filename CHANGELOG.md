@@ -1,3 +1,7 @@
+## [0.0.5+2]
+* Reformatted flutter_native_image.dart
+* Bump version to get the analysis going again
+
 ## [0.0.5+1]
 
 * Removed some sample code

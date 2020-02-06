@@ -4,7 +4,8 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 
 class FlutterNativeImage {
-  static const MethodChannel _channel = const MethodChannel('flutter_native_image');
+  static const MethodChannel _channel =
+      const MethodChannel('flutter_native_image');
 
   /// Compress an image
   ///
@@ -14,7 +15,10 @@ class FlutterNativeImage {
   /// Use [targetWidth] and [targetHeight] to resize the image for a specific
   /// target size.
   static Future<File> compressImage(String fileName,
-      {int percentage = 70, int quality = 70, int targetWidth = 0, int targetHeight = 0}) async {
+      {int percentage = 70,
+      int quality = 70,
+      int targetWidth = 0,
+      int targetHeight = 0}) async {
     var file = await _channel.invokeMethod("compressImage", {
       'file': fileName,
       'quality': quality,
@@ -54,8 +58,8 @@ class FlutterNativeImage {
       }
     }
 
-    var properties =
-        Map.from(await _channel.invokeMethod("getImageProperties", {'file': fileName}));
+    var properties = Map.from(
+        await _channel.invokeMethod("getImageProperties", {'file': fileName}));
     return new ImageProperties(
         width: properties["width"],
         height: properties["height"],
@@ -100,5 +104,8 @@ class ImageProperties {
   int height;
   ImageOrientation orientation;
 
-  ImageProperties({this.width = 0, this.height = 0, this.orientation = ImageOrientation.undefined});
+  ImageProperties(
+      {this.width = 0,
+      this.height = 0,
+      this.orientation = ImageOrientation.undefined});
 }
