@@ -83,6 +83,15 @@ class FlutterNativeImage {
 
     return new File(file);
   }
+
+  static Future<File> rotateImage(String filePath, int angle) async {
+    var file = await _channel.invokeMethod("rotateImage", {
+      'file': filePath,
+      'angle': angle
+    });
+
+    return new File(file);
+  }
 }
 
 /// Imageorientation enum used for [getImageProperties].
