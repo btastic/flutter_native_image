@@ -1,3 +1,6 @@
+## [0.0.5+3]
+* v2 Embedding (thanks to adithyaxx)
+
 ## [0.0.5+2]
 * Reformatted flutter_native_image.dart
 * Bump version to get the analysis going again
