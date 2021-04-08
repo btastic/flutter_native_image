@@ -34,7 +34,7 @@ class FlutterNativeImage {
   ///
   /// Gets the properties of an image given the [fileName].
   static Future<ImageProperties> getImageProperties(String fileName) async {
-    ImageOrientation decodeOrientation(int orientation) {
+    ImageOrientation decodeOrientation(int? orientation) {
       // For details, see: https://developer.android.com/reference/android/media/ExifInterface
       switch (orientation) {
         case 1:
@@ -58,8 +58,7 @@ class FlutterNativeImage {
       }
     }
 
-    var properties = Map.from(
-        await _channel.invokeMethod("getImageProperties", {'file': fileName}));
+    var properties = Map.from(await (_channel.invokeMethod("getImageProperties", {'file': fileName})));
     return new ImageProperties(
         width: properties["width"],
         height: properties["height"],
@@ -100,8 +99,8 @@ enum ImageOrientation {
 
 /// Return value of [getImageProperties].
 class ImageProperties {
-  int width;
-  int height;
+  int? width;
+  int? height;
   ImageOrientation orientation;
 
   ImageProperties(
