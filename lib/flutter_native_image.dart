@@ -58,8 +58,7 @@ class FlutterNativeImage {
       }
     }
 
-    var properties = Map.from(
-        await (_channel.invokeMethod("getImageProperties", {'file': fileName}) as FutureOr<Map<dynamic, dynamic>>));
+    var properties = Map.from(await (_channel.invokeMethod("getImageProperties", {'file': fileName})));
     return new ImageProperties(
         width: properties["width"],
         height: properties["height"],
