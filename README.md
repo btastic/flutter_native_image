@@ -14,7 +14,7 @@ Right now there are a few functions. Please find some examples below.
 Add the following lines to your pubspec.yaml under dependencies
 
 ```yaml
-flutter_native_image: ^0.0.5
+flutter_native_image: ^0.0.6
 ```
 
 ### Compress an image
@@ -58,6 +58,8 @@ Returns a file containing the image cropped with the given dimensions.
 [Alexis Leblond (a-leblond)](https://github.com/a-leblond) the image properties feature.
 
 [Eugene Strokin](https://github.com/strokine) the resize to target height/width feature
+
+[Dae Won Kim](https://github.com/dw2kim) null-safety feature
 
 [![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/0)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/0)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/1)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/1)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/2)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/2)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/3)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/3)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/4)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/4)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/5)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/5)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/6)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/6)[![](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/images/7)](https://sourcerer.io/fame/btastic/btastic/flutter_native_image/links/7)
 
