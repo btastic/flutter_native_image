@@ -1,3 +1,6 @@
+## [0.0.6]
+* Added null-safety support (thanks to dw2kim)
+
 ## [0.0.5+3]
 * v2 Embedding (thanks to adithyaxx)
 
