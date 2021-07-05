@@ -120,7 +120,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                 result.error("file does not exist", fileName, null);
                 return;
             }
-            Boolean isPNG = fileName.contains(".png") || fileName.contains(".PNG");
+            Boolean isPNG = fileName.toLowerCase().contains(".png");
             Bitmap.CompressFormat format = isPNG ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG;
             String extension = isPNG ? ".png" : ".jpg";
 
