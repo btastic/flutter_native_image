@@ -126,7 +126,6 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
             Bitmap bmp = BitmapFactory.decodeFile(fileName);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            
             try {
                 bmp = Bitmap.createBitmap(bmp, originX, originY, width, height);
             } catch(IllegalArgumentException e) {
