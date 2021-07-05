@@ -1,3 +1,7 @@
+## [0.0.6+1]
+* Changed constraints to support flutter 2.20.0
+* Fix for missing transparency after crop (thanks to netgfx)
+
 ## [0.0.6]
 * Added null-safety support (thanks to dw2kim)
 
