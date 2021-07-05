@@ -120,10 +120,13 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                 result.error("file does not exist", fileName, null);
                 return;
             }
+            Boolean isPNG = fileName.contains(".png") || fileName.contains(".PNG");
+            Bitmap.CompressFormat format = ((isPNG == true) ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG);
+            String extension = ((isPNG == true) ? ".png" : ".jpg");
 
             Bitmap bmp = BitmapFactory.decodeFile(fileName);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
+            
             try {
                 bmp = Bitmap.createBitmap(bmp, originX, originY, width, height);
             } catch(IllegalArgumentException e) {
@@ -131,13 +134,13 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                 result.error("bounds are outside of the dimensions of the source image", fileName, null);
             }
 
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bmp.compress(format, 100, bos);
             bmp.recycle();
             OutputStream outputStream = null;
             try {
                 String outputFileName = File.createTempFile(
                         getFilenameWithoutExtension(file).concat("_cropped"),
-                        ".jpg",
+                        extension,
                         context.getExternalCacheDir()
                 ).getPath();
 
