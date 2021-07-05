@@ -122,7 +122,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
             }
             Boolean isPNG = fileName.contains(".png") || fileName.contains(".PNG");
             Bitmap.CompressFormat format = ((isPNG == true) ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG);
-            String extension = ((isPNG == true) ? ".png" : ".jpg");
+            String extension = isPNG ? ".png" : ".jpg";
 
             Bitmap bmp = BitmapFactory.decodeFile(fileName);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
