@@ -101,6 +101,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         newBmp.compress(Bitmap.CompressFormat.JPEG, quality, bos);
 
+        OutputStream outputStream = null;
         try {
             String outputFileName = File.createTempFile(
                     getFilenameWithoutExtension(file).concat("_compressed"),
@@ -108,7 +109,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                     context.getExternalCacheDir()
             ).getPath();
 
-            OutputStream outputStream = new FileOutputStream(outputFileName);
+            outputStream = new FileOutputStream(outputFileName);
             bos.writeTo(outputStream);
 
             copyExif (fileName, outputFileName);
@@ -120,6 +121,14 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         } catch (IOException e) {
             e.printStackTrace();
             result.error("something went wrong", fileName, null);
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
