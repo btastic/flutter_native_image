@@ -85,6 +85,10 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         }
 
         Bitmap bmp = BitmapFactory.decodeFile(fileName);
+        if (bmp == null) {
+            result.error("File could not be decoded by BitmapFactory", fileName, null);
+            return;
+        }
 
         int newWidth = targetWidth == 0 ? (bmp.getWidth() / 100 * resizePercentage) : targetWidth;
         int newHeight = targetHeight == 0 ? (bmp.getHeight() / 100 * resizePercentage) : targetHeight;
