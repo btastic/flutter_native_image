@@ -236,11 +236,6 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         }
     }
 
-    private static String pathComponent(String filename) {
-        int i = filename.lastIndexOf(File.separator);
-        return (i > -1) ? filename.substring(0, i) : filename;
-    }
-
     private static String getFilenameWithoutExtension(File file) {
         String fileName = file.getName();
 
