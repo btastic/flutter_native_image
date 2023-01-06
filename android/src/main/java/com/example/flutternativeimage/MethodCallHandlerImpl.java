@@ -3,8 +3,11 @@ package com.example.flutternativeimage;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -21,6 +24,7 @@ import io.flutter.plugin.common.MethodChannel;
 
 public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
     private final Context context;
+    private final String LOG_TAG = "FlutterNativeImage";
 
     MethodCallHandlerImpl(Context context) {
         this.context = context;
@@ -66,7 +70,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                 OutputStream outputStream = new FileOutputStream(outputFileName);
                 bos.writeTo(outputStream);
 
-                copyExif(fileName, outputFileName);
+                copyExif(fileName, outputFileName, null);
 
                 result.success(outputFileName);
             } catch (FileNotFoundException e) {
@@ -95,13 +99,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
             properties.put("width", options.outWidth);
             properties.put("height", options.outHeight);
 
-            int orientation = ExifInterface.ORIENTATION_UNDEFINED;
-            try {
-                ExifInterface exif = new ExifInterface(fileName);
-                orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-            } catch(IOException ex) {
-                // EXIF could not be read from the file; ignore
-            }
+            int orientation = getOrientation(fileName);
             properties.put("orientation", orientation);
 
             result.success(properties);
@@ -124,7 +122,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
             Bitmap.CompressFormat format = isPNG ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG;
             String extension = isPNG ? ".png" : ".jpg";
 
-            Bitmap bmp = BitmapFactory.decodeFile(fileName);
+            Bitmap bmp = decodeBitmapWithResolvedOrientation(fileName);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try {
                 bmp = Bitmap.createBitmap(bmp, originX, originY, width, height);
@@ -147,7 +145,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                 outputStream = new FileOutputStream(outputFileName);
                 bos.writeTo(outputStream);
 
-                copyExif(fileName, outputFileName);
+                copyExif(fileName, outputFileName, ExifInterface.ORIENTATION_NORMAL);
 
                 result.success(outputFileName);
             } catch (FileNotFoundException e) {
@@ -177,7 +175,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         }
     }
 
-    private void copyExif(String filePathOri, String filePathDest) {
+    private void copyExif(String filePathOri, String filePathDest, @Nullable Integer overwriteOrientationAttr) {
         try {
             ExifInterface oldExif = new ExifInterface(filePathOri);
             ExifInterface newExif = new ExifInterface(filePathDest);
@@ -201,22 +199,93 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                             "GPSLongitude",
                             "GPSLongitudeRef",
                             "Make",
-                            "Model",
-                            "Orientation");
+                            "Model");
             for (String attribute : attributes) {
                 setIfNotNull(oldExif, newExif, attribute);
+            }
+
+            if (overwriteOrientationAttr == null) {
+                setIfNotNull(oldExif, newExif, "Orientation");
+            } else {
+                newExif.setAttribute("Orientation", String.valueOf(overwriteOrientationAttr));
             }
 
             newExif.saveAttributes();
 
         } catch (Exception ex) {
-            Log.e("FlutterNativeImagePlugin", "Error preserving Exif data on selected image: " + ex);
+            Log.e(LOG_TAG, "Error preserving Exif data on selected image: " + ex);
         }
     }
 
     private void setIfNotNull(ExifInterface oldExif, ExifInterface newExif, String property) {
         if (oldExif.getAttribute(property) != null) {
             newExif.setAttribute(property, oldExif.getAttribute(property));
+        }
+    }
+
+    /**
+     * This method resolves the orientation of an image and returns the bitmap normalised.
+     * @param filePath Path of the image file. Used to decode the {@link Bitmap} and camera rotation
+     * @return {@link Bitmap} object with normalised orientation.
+     */
+    private Bitmap decodeBitmapWithResolvedOrientation(String filePath) {
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+        int orientation = getOrientation(filePath);
+
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                matrix.setScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.setRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.setRotate(-90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(-90);
+                break;
+            case ExifInterface.ORIENTATION_NORMAL:
+            case ExifInterface.ORIENTATION_UNDEFINED:
+            default:
+                return bitmap;
+        }
+
+        try {
+            Bitmap oriented = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return oriented;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return bitmap;
+        }
+    }
+
+    /**
+     * Reads the orientation attribute from an image file.
+     * @param filePath Path of the image file
+     * @return orientation attribute read by {@link ExifInterface} or the default value {@link ExifInterface#ORIENTATION_NORMAL}
+     */
+    private int getOrientation(String filePath) {
+        try {
+            ExifInterface exif = new ExifInterface(filePath);
+            return exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        } catch(IOException ex) {
+            // EXIF could not be read from the file; return default
+            return ExifInterface.ORIENTATION_NORMAL;
         }
     }
 
