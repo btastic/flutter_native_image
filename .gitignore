@@ -13,3 +13,6 @@ pubspec.lock
 # ignore example generated
 example/ios/Runner.xcodeproj/
 example/ios/Flutter/
+.project
+.classpath
+.settings
