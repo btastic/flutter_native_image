@@ -72,12 +72,7 @@
     else if ([@"getImageProperties" isEqualToString:call.method]) {
         _arguments = call.arguments;
         
-        NSString *fileArgument = [_arguments objectForKey:@"file"];
-        NSURL *uncompressedFileUrl = [NSURL URLWithString:fileArgument];
-        NSString *fileName = [[fileArgument lastPathComponent] stringByDeletingPathExtension];
-
-        NSString *path = [uncompressedFileUrl path];
-        NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
+        NSData *data = [[NSFileManager defaultManager] contentsAtPath:[_arguments objectForKey:@"file"]];
 
         UIImage *img = [[UIImage alloc] initWithData:data];
         
